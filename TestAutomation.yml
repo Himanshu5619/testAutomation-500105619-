@@ -1,17 +1,9 @@
 name: API Tests
-
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+on: [push, pull_request]
 
 jobs:
   test:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -23,12 +15,11 @@ jobs:
 
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
-          pip install fastapi uvicorn pytest requests
+          sudo apt install python3 pipenv -y
+          pipenv install fastapi uvicorn pytest requests
 
       - name: Start FastAPI server
-        run: |
-          nohup python apiserver.py &
+        run: pipenv run python3 apiserver.py &
         env:
           PYTHONUNBUFFERED: 1
 
@@ -36,9 +27,4 @@ jobs:
         run: sleep 5  # Wait to ensure the server is up
 
       - name: Run tests
-        run: pytest testAutomationPytest.py
-Commit and Push to GitHub: Push the changes to your GitHub repository:
-
-git add .
-git commit -m "Add test automation and GitHub Actions"
-git push origin main
+        run: pipenv run pytest automation_test_pytest.py
